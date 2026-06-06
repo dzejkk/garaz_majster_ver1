@@ -1,0 +1,31 @@
+.card {
+  background-color: #1f2937;
+  border: 1px solid #374151;
+  border-radius: 8px;
+  padding: 1.5rem;
+  transition: transform 0.2s ease;
+  cursor: pointer;
+}
+
+.card:hover {
+  transform: translateY(-4px);
+  border-color: #fbbf24;
+}
+
+.title {
+  margin: 0 0 1rem 0;
+  color: #fbbf24;
+  font-size: 1.25rem;
+}
+
+.details p {
+  margin: 0.25rem 0;
+  color: #d1d5db;
+  font-size: 0.9rem;
+}
+
+.details > .vin {
+  font-family: monospace;
+  color: #9ca3af;
+  margin-top: 1rem;
+}

@@ -1,0 +1,113 @@
+.layout {
+  width: 1540px;
+  max-width: 100%;
+  margin: 0 auto;
+
+  display: flex;
+  height: 100vh;
+  background-color: #111827;
+  color: #f3f4f6;
+  font-family: sans-serif;
+  transition: all 0.3s ease-in-out;
+}
+
+.sidebar {
+  background-color: #1f2937;
+  border-right: 1px solid #374151;
+  transition: width 0.3s ease;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  white-space: nowrap;
+}
+
+.sidebarOpen {
+  width: 250px;
+}
+
+.sidebarClosed {
+  width: 70px;
+}
+
+.logo {
+  height: 64px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-weight: bold;
+  font-size: 1.25rem;
+  border-bottom: 1px solid #374151;
+  color: #fbbf24;
+  cursor: pointer;
+}
+
+.nav {
+  padding: 1rem 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.navItem {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 0.75rem 1.5rem;
+  color: #9ca3af;
+  text-decoration: none;
+  transition:
+    background-color 0.2s,
+    color 0.2s;
+}
+
+.navItem:hover {
+  background-color: #374151;
+  color: #f3f4f6;
+}
+
+/* TanStack Router pridáva aktívnej linke triedu active */
+.navItem.active {
+  background-color: #374151;
+  color: #fbbf24;
+  border-right: 3px solid #fbbf24;
+}
+
+.mainContent {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.header {
+  height: 64px;
+  background-color: #1f2937;
+  border-bottom: 1px solid #374151;
+  display: flex;
+  align-items: center;
+  padding: 0 1.5rem;
+  justify-content: space-between;
+}
+
+.menuBtn {
+  background: none;
+  border: none;
+  color: #f3f4f6;
+  cursor: pointer;
+  padding: 0.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 6px;
+  transition: background-color 0.2s;
+}
+
+.menuBtn:hover {
+  background-color: #374151;
+}
+
+.content {
+  flex: 1;
+  padding: 1.5rem;
+  overflow-y: auto;
+}
