@@ -9,12 +9,18 @@ import {
   CheckCircle2,
   AlertTriangle,
   XCircle,
+  PlusCircle,
 } from "lucide-react";
 import styles from "./VehicleDetail.module.css";
+import { Button } from "../ui/Button/Button";
+import { Drawer } from "../ui/Drawer";
+import { useState } from "react";
 
 ////////////////////////////////////////////////////////////////
 
 export function VehicleDetail() {
+  const [activateDrawer, setActivateDrawer] = useState(false);
+
   //tahanie vehicleID s useParams
   const { vehicleId } = useParams({ strict: false });
 
@@ -37,13 +43,13 @@ export function VehicleDetail() {
   const { vehicleInfo, stats, serviceIntervals } = statusData;
 
   // Pomocná funkcia na vykreslenie správnej ikony k statusu servisu
-  const getStatusIcon = (status: "OK" | "WARNING" | "CRITICAL") => {
+  const getStatusIcon = (status: "OK" | "WARNING" | "DUE") => {
     switch (status) {
       case "OK":
         return <CheckCircle2 size={18} />;
       case "WARNING":
         return <AlertTriangle size={18} />;
-      case "CRITICAL":
+      case "DUE":
         return <XCircle size={18} />;
     }
   };
@@ -114,7 +120,19 @@ export function VehicleDetail() {
       </div>
 
       {/* Sekcia: Servisný semafor */}
-      <h2 className={styles.sectionTitle}>Stav servisných intervalov</h2>
+
+      <div className={styles.flex_between_util}>
+        <h2 className={styles.sectionTitle}>Stav servisných intervalov</h2>
+        <Button
+          type="button"
+          variant="primary"
+          size="sm"
+          onClick={() => setActivateDrawer(true)}
+        >
+          <PlusCircle strokeWidth={1.5} />
+          Pridaj servisny interval
+        </Button>
+      </div>
 
       <div className={styles.intervalList}>
         {serviceIntervals.map((interval) => (
@@ -143,6 +161,14 @@ export function VehicleDetail() {
           </div>
         ))}
       </div>
+
+      <Drawer
+        isOpen={activateDrawer}
+        onClose={() => setActivateDrawer(false)}
+        title="Novy servisny interval"
+      >
+        <p>formular</p>
+      </Drawer>
     </motion.div>
   );
 }

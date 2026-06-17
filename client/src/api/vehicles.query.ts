@@ -1,6 +1,13 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { vehiclesApi } from "./vehicles.api";
-import type { CreateServiceLogPayload } from "./vehicles.api";
+import type {
+  CreateServiceLogPayload,
+  CreateServiceTaskPayload,
+} from "./vehicles.api";
+
+// TENTO JEDEN RIADOK VYRIEŠI DUPLICITU:
+// Vyrobí nový typ tak, že z API payloadu vyhodí "vehicleId"
+type ServiceIntervalFormData = Omit<CreateServiceTaskPayload, "vehicleId">;
 
 // get all cars info
 
@@ -29,7 +36,7 @@ export const useVehicleServisHistory = (vehicleId: string) => {
   });
 };
 
-//  MUTACIA
+//  MUTACIE
 export function useCreateServiceLog(vehicleId: string) {
   const queryClient = useQueryClient();
 
@@ -42,6 +49,21 @@ export function useCreateServiceLog(vehicleId: string) {
       queryClient.invalidateQueries({
         queryKey: ["vehicleServiceLogs", vehicleId],
       });
+      queryClient.invalidateQueries({ queryKey: ["vehicleStatus", vehicleId] });
+    },
+  });
+}
+
+export function useCreateServiceInterval(vehicleId: string) {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: (formData: ServiceIntervalFormData) =>
+      vehiclesApi.createServiceInterval({
+        vehicleId, // Pridáme ID auta
+        ...formData, // Dosypeme zvyšok dát z formulára
+      }),
+    onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["vehicleStatus", vehicleId] });
     },
   });

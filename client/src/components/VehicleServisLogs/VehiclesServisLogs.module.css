@@ -114,4 +114,9 @@
   font-size: 0.9rem;
   transition: color 0.2s;
   margin-bottom: 0.5rem;
+  transition: color 0.2s ease-in-out;
+}
+
+.backLink:hover {
+  color: gold;
 }

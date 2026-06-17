@@ -43,6 +43,14 @@ export interface CreateServiceLogPayload {
   serviceDate: string;
   serviceTaskId: string | null; // ID úlohy, ktorú tento servis vyresetuje
 }
+export interface CreateServiceTaskPayload {
+  vehicleId: string;
+  title: string;
+  intervalKm?: number | null;
+  intervalMonths?: number | null;
+  lastPerformedOdometer?: number | null;
+  lastPerformedDate?: string | null;
+}
 
 //
 //
@@ -82,7 +90,6 @@ export const vehiclesApi = {
   },
 
   // nova  POST metoda pre  vytvorenie  servis logu
-
   createCarServiceLogs: async (
     data: CreateServiceLogPayload,
   ): Promise<CreateServiceLogPayload[]> => {
@@ -98,5 +105,27 @@ export const vehiclesApi = {
       throw new Error("Nepodarilo sa vytvorit servisny zaznam");
     }
     return response.json();
+  },
+
+  //nova POST metoda na vytvorenie servisneho intervalu
+
+  createServiceInterval: async (
+    data: CreateServiceTaskPayload,
+  ): Promise<CreateServiceTaskPayload[]> => {
+    const response = await fetch("/api/service-tasks", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(data),
+    });
+
+    if (!response.ok) {
+      const errorData = await response.json().catch(() => ({}));
+      // Tvoj backend vracia { error: "..." }, preto errorData.error
+      throw new Error(errorData.error || "Nepodarilo sa vytvoriť interval");
+    }
+
+    return response.json() as Promise<CreateServiceTaskPayload[]>;
   },
 };

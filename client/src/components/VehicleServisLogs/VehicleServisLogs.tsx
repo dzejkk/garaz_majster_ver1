@@ -102,7 +102,7 @@ export function VehicleServisLogs() {
       <Drawer
         isOpen={isDrawerOpen}
         onClose={() => setIsDrawerOpen(false)}
-        title="Novy servis zaznam"
+        title="Novy servisny zaznam"
       >
         <ServiceLogForm
           vehicleId={vehicleId as string}

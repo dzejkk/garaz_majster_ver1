@@ -157,3 +157,11 @@
   background-color: rgba(239, 68, 68, 0.15);
   color: #ef4444;
 }
+
+/* utility */
+
+.flex_between_util {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
