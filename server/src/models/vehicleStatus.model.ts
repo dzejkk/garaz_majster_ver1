@@ -1,3 +1,4 @@
+import { numeric } from "drizzle-orm/sqlite-core";
 import { db } from "../db/index.js";
 import { vehicles, serviceLogs, serviceTasks } from "../db/schema.js";
 import { eq, sql } from "drizzle-orm";
@@ -17,6 +18,7 @@ export const vehicleStatusModel = {
         totalRepairs: sql<number>`count(${serviceLogs.id})`, // drizzle feature pre raw sql query
         totalSpent: sql<number>`coalesce(sum(${serviceLogs.cost}), 0)`,
       })
+
       .from(serviceLogs)
       .where(eq(serviceLogs.vehicleId, vehicleId as any));
 
@@ -29,20 +31,48 @@ export const vehicleStatusModel = {
     // 4. Prejdeme každú úlohu a prepočítame jej reálny stav
     const taskStatuses = tasks.map((task) => {
       let remainingKm = null;
+      let remainingDays = null;
       let status = "OK";
 
-      if (task.intervalKm && task.lastPerformedOdometer) {
-        // Výpočet: Kedy má byť ďalší servis (posledný + interval)
+      // Vypocet Kilometrov
+
+      if (
+        task.intervalKm &&
+        task.lastPerformedOdometer &&
+        vehicle.currentOdometer
+      ) {
         const nextServiceAtKm =
           Number(task.lastPerformedOdometer) + Number(task.intervalKm);
-        // Koľko km zostáva (ďalší servis - aktuálny tachometer auta)
         remainingKm = nextServiceAtKm - Number(vehicle.currentOdometer);
+      }
 
-        // Určenie statusu podľa zostávajúcich kilometrov
-        if (remainingKm <= 0) {
-          status = "DUE";
-        } else if (remainingKm <= 1500) {
-          status = "WARNING";
+      if (remainingKm !== null && remainingKm <= 0) {
+        status = "DUE";
+      } else if (remainingKm !== null && remainingKm <= 1500) {
+        status = "WARNING";
+      }
+
+      // VYPOCET CASU
+
+      if (task.intervalMonths && task.lastPerformedDate) {
+        const lastDate = new Date(task.lastPerformedDate);
+        const nextServiceDate = new Date(lastDate);
+
+        nextServiceDate.setMonth(
+          nextServiceDate.getMonth() + Number(task.intervalMonths),
+        );
+
+        // vypocitame rozdiel oproti dnesku v dnoch
+
+        const today = new Date();
+        const diffTime = nextServiceDate.getTime() - today.getTime();
+        remainingDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+
+        //urcenie statusu podla casu
+        if (remainingDays <= 0) {
+          status = "DUE"; // Ak si prešvihol dátum, je jedno že máš rezervu v km
+        } else if (remainingDays <= 30 && status !== "DUE") {
+          status = "WARNING"; // Upozornenie mesiac vopred (ak už nie je DUE z km)
         }
       }
 
@@ -50,8 +80,11 @@ export const vehicleStatusModel = {
         id: task.id,
         title: task.title,
         intervalKm: task.intervalKm,
+        intervalMonths: task.intervalMonths,
         lastPerformedOdometer: task.lastPerformedOdometer,
+        lastPerformedDate: task.lastPerformedDate,
         remainingKm,
+        remainingDays,
         status,
       };
     });

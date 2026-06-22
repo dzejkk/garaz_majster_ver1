@@ -1,6 +1,7 @@
 import { useVehicleStatus } from "../../api/vehicles.query";
 import { useParams, Link } from "@tanstack/react-router";
 import { motion } from "framer-motion";
+import cx from "clsx";
 import {
   ArrowLeft,
   Wrench,
@@ -15,6 +16,7 @@ import styles from "./VehicleDetail.module.css";
 import { Button } from "../ui/Button/Button";
 import { Drawer } from "../ui/Drawer";
 import { useState } from "react";
+import { ServiceIntervalForm } from "../ServiceIntervalForm/ServiceIntervalForm";
 
 ////////////////////////////////////////////////////////////////
 
@@ -138,7 +140,10 @@ export function VehicleDetail() {
         {serviceIntervals.map((interval) => (
           <div
             key={interval.id}
-            className={`${styles.intervalCard} ${styles[`status_${interval.status}`]}`}
+            className={cx(
+              styles.intervalCard,
+              styles[`status_${interval.status}`],
+            )}
           >
             <div className={styles.intervalInfo}>
               <h4>{interval.title}</h4>
@@ -167,7 +172,10 @@ export function VehicleDetail() {
         onClose={() => setActivateDrawer(false)}
         title="Novy servisny interval"
       >
-        <p>formular</p>
+        <ServiceIntervalForm
+          vehicleId={vehicleId as string}
+          onClose={() => setActivateDrawer(false)}
+        ></ServiceIntervalForm>
       </Drawer>
     </motion.div>
   );

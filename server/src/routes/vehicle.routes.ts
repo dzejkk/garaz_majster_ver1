@@ -14,6 +14,7 @@ router.get("/", getVehicles);
 
 router.put("/:id", updateVehicle);
 
+//hlavna logika vypoctov
 router.get("/:vehicleId/status", getVehicleStatusHandler);
 
 export default router;
