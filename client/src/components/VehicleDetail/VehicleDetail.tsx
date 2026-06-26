@@ -35,13 +35,11 @@ export function VehicleDetail() {
 
   //
 
-  if (isLoading)
-    return <div className="p-6 text-gray-400">Načítavam detaily motora...</div>;
-  if (isError)
-    return <div className="p-6 text-red-500">Chyba pri načítaní detailov.</div>;
+  if (isLoading) return <div>Načítavam detaily motora...</div>;
+  if (isError) return <div>Chyba pri načítaní detailov.</div>;
   if (!statusData) return null;
 
-  // musi ist az po  ifs
+  // musi ist az po ifs
   const { vehicleInfo, stats, serviceIntervals } = statusData;
 
   // Pomocná funkcia na vykreslenie správnej ikony k statusu servisu
@@ -151,6 +149,10 @@ export function VehicleDetail() {
                 Interval: {interval.intervalKm.toLocaleString()} km | Naposledy
                 pri: {interval.lastPerformedOdometer.toLocaleString()} km
               </p>
+              <p>
+                Interval : {interval.intervalMonths} mesiacov | Naposledy
+                vykonane: {interval.lastPerformedDate}
+              </p>
             </div>
 
             <div
@@ -159,8 +161,8 @@ export function VehicleDetail() {
               {getStatusIcon(interval.status)}
               <span>
                 {interval.remainingKm > 0
-                  ? `Zostáva ${interval.remainingKm.toLocaleString()} km`
-                  : `Zmeškané o ${Math.abs(interval.remainingKm).toLocaleString()} km`}
+                  ? `Zostáva ${interval.remainingKm.toLocaleString()} km alebo ${interval.remainingDays} dni`
+                  : `Zmeškané o ${Math.abs(interval.remainingKm).toLocaleString()} km a ${interval.remainingDays} dni`}
               </span>
             </div>
           </div>

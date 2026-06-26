@@ -37,11 +37,11 @@ export const vehicleModel = {
 
   // Aktualizovať tachometer
   update: async (id: string, data: any) => {
-    const [updated] = await db
+    const [updatedVehicle] = await db
       .update(vehicles)
       .set(data)
       .where(eq(vehicles.id, id as any))
       .returning();
-    return updated;
+    return updatedVehicle;
   },
 };

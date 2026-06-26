@@ -30,9 +30,7 @@ Implementovali sme pravidlo „Čo nastane skôr“ (Whichever comes first).
 
 ## 🎯 Čo ideme robiť teraz
 
-Ideme implementovať zápis nového servisného záznamu na stránke histórie (`VehicleServisLogs`).
-
-1. Potrebujeme spraviť formulár vo vyskakovacom okne (Modal) na pridanie servisu (Názov, popis, cena, dátum, stav tachometra + Dropdown select na voliteľné naviazanie na `serviceTask`).
-2. Potrebujeme vytvoriť mutáciu pomocou `useMutation` z TanStack Query, ktorá odošle POST požiadavku na API a následne invaliduje cache (`queryClient.invalidateQueries`), aby sa zoznam ihneď aktualizoval bez refreshu.
-
-Navrhni mi kód pre frontendový komponent formulára (modal) a TanStack Query mutáciu, pričom zapracuj spomínané prepojenie s úlohami.
+- implementovat zapis kilometrov pre vozdilo
+- ptm musime upravit serviceInterval Badge aby nam pekne zobrazovalo prepasnute dni aj kilometre,
+- spravit z par veci komponenty aby sa to trosku upratalo
+- atd....

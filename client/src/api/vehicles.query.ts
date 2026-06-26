@@ -68,3 +68,20 @@ export function useCreateServiceInterval(vehicleId: string) {
     },
   });
 }
+
+export function useUpdateOdometer(vehicleId: string) {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: (currentOdometer: number) =>
+      vehiclesApi.updateOdometer(vehicleId, currentOdometer),
+
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["vehicleStatus", vehicleId] });
+    },
+    onError: (error) => {
+      console.error("CHyba pri aktualizacii odometra", error);
+      alert("nepodarilo s aktualizovat odometer");
+    },
+  });
+}

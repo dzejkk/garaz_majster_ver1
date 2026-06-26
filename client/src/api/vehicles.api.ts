@@ -66,7 +66,7 @@ export const vehiclesApi = {
     return response.json();
   },
 
-  // nova funkcia pre  car detail
+  // nova funkcia pre car detail
   getCarStatus: async (vehicleId: string): Promise<VehicleStatus> => {
     const response = await fetch(`/api/vehicles/${vehicleId}/status`);
 
@@ -127,5 +127,24 @@ export const vehiclesApi = {
     }
 
     return response.json() as Promise<CreateServiceTaskPayload[]>;
+  },
+
+  // PUT -  aktualizacia odometra
+
+  updateOdometer: async (vehicleId: string, currentOdometer: number) => {
+    const response = await fetch(`/api/vehicles/${vehicleId}`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ currentOdometer }), // ak backend caka objekt musis poslat objekt
+    });
+
+    if (!response.ok) {
+      const errorData = await response.json().catch(() => ({}));
+      throw new Error(errorData.error || "Nepodarilo sa aktualizovat odometer");
+    }
+
+    return response.json();
   },
 };

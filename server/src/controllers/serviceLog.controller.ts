@@ -10,6 +10,7 @@ export const createServiceLog = async (req: Request, res: Response) => {
       odometerAtService,
       serviceDate,
       cost,
+      serviceTaskId,
     } = req.body;
 
     if (!vehicleId || !title || !odometerAtService || !serviceDate) {
@@ -27,7 +28,18 @@ export const createServiceLog = async (req: Request, res: Response) => {
       odometerAtService: Number(odometerAtService),
       serviceDate,
       cost: cost ? Number(cost) : null,
+      serviceTaskId: serviceTaskId || null,
     });
+
+    // Klucove pre aktualiazcia servisneho intervalu
+
+    if (serviceTaskId) {
+      await serviceLogModel.updateTaskLastPerformed({
+        taskId: serviceTaskId,
+        odometer: Number(odometerAtService),
+        date: serviceDate,
+      });
+    }
 
     res
       .status(201)
