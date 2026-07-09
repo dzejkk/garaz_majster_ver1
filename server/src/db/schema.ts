@@ -6,6 +6,7 @@ import {
   timestamp,
   date,
 } from "drizzle-orm/pg-core";
+import { time } from "node:console";
 
 export const users = pgTable("users", {
   id: uuid("id").primaryKey().defaultRandom(),
@@ -27,6 +28,11 @@ export const vehicles = pgTable("vehicles", {
   fuelType: varchar("fuel_type", { length: 30 }),
   enginePowerKw: integer("engine_power_kw"),
   currentOdometer: integer("current_odometer").default(0).notNull(),
+
+  // pridane kvoly zoradovania logov aut
+
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+  updatedAt: timestamp("updated_at").defaultNow().notNull(),
 });
 
 export const serviceTasks = pgTable("service_tasks", {

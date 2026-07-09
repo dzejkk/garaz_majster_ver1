@@ -58,6 +58,10 @@
   justify-content: start;
   text-align: start;
   transition: all 0.2s ease-in-out;
+  max-height: 95px;
+  min-height: 0; /* stops flex blowout if this is itself a flex item */
+  overflow: hidden;
+  box-sizing: border-box;
 }
 
 .statCard:hover {
@@ -70,6 +74,7 @@
   border-radius: 10px;
   display: flex;
   align-items: center;
+
   justify-content: center;
   color: #fbbf24;
 }
@@ -85,6 +90,98 @@
   font-size: 1.75rem;
   font-weight: bold;
   margin: 0.25rem 0 0 0;
+}
+
+/*editable odometer*/
+
+/* --- Editable Odometer prídavky --- */
+
+.odometerContent {
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  /* overflow: hidden bráni pretiahnutiu počas animácie a fixná min-výška zabráni poskakovaniu karty */
+  min-height: 56px;
+}
+
+.viewContainer {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-top: 0.25rem;
+}
+
+.editContainer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+  margin-top: 0.25rem;
+}
+
+.editInput {
+  background-color: #374151;
+  border: none;
+  color: #ffffff;
+  border-radius: 4px;
+  padding: 0.25rem 0.5rem;
+  font-size: 1.5rem;
+  font-weight: bold;
+  max-width: 105px;
+  outline: none;
+  transition: border-color 0.2s;
+  /* Skryje šípky v inpute typu number pre čistý vzhľad */
+  -moz-appearance: textfield;
+}
+
+.editInput::-webkit-outer-spin-button,
+.editInput::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+.editInput:focus {
+  border-color: #10b981;
+}
+
+.iconBtn {
+  background: #374151;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.3rem;
+  border-radius: 6px;
+  transition: all 0.2s;
+}
+
+.iconBtn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.editBtn {
+  color: #9ca3af;
+  transform: translate(25px, -37px);
+}
+.editBtn:hover {
+  color: #fbbf24;
+}
+
+.saveBtn {
+  color: #10b981;
+  background-color: "#374151";
+}
+.saveBtn:hover {
+  background-color: rgba(16, 185, 129, 0.1);
+}
+
+.cancelBtn {
+  color: #ef4444;
+}
+.cancelBtn:hover {
+  background-color: rgba(239, 68, 68, 0.1);
 }
 
 /* Servisné intervaly (Semafor) */

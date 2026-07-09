@@ -73,6 +73,9 @@ export const updateVehicle = async (req: Request, res: Response) => {
     if (allowedData.year !== undefined)
       allowedData.year = Number(allowedData.year);
 
+    //pridame pre zoradovanie
+    allowedData.updatedAt = new Date();
+
     const updatedVehicle = await vehicleModel.update(id as any, allowedData);
 
     if (!updatedVehicle) {

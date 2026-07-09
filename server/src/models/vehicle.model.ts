@@ -1,6 +1,6 @@
 import { db } from "../db/index.js";
 import { vehicles, users } from "../db/schema.js";
-import { eq } from "drizzle-orm";
+import { eq, desc } from "drizzle-orm";
 
 export const vehicleModel = {
   // Nájsť alebo vytvoriť mock usera
@@ -30,9 +30,9 @@ export const vehicleModel = {
     return newVehicle;
   },
 
-  // Vytiahnuť všetky autá
+  // Vytiahnuť všetky autá + zorad podla aktualizacie od najnovsej po najstarsiu
   findAll: async () => {
-    return await db.query.vehicles.findMany();
+    return await db.select().from(vehicles).orderBy(desc(vehicles.updatedAt));
   },
 
   // Aktualizovať tachometer

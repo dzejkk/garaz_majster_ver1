@@ -78,18 +78,6 @@ export function VehicleDetail() {
 
       {/* Grid s widgetmi (Štatistiky) */}
       <div className={styles.statsGrid}>
-        {/* <div className={styles.statCard}>
-          <div className={styles.iconWrapper}>
-            <Gauge size={24} />
-          </div>
-          <div>
-            <p className={styles.statLabel}>Aktuálny nájazd</p>
-            <p className={styles.statValue}>
-              {vehicleInfo.currentOdometer.toLocaleString()} km
-            </p>
-          </div>
-        </div> */}
-
         <EditableOdometer
           vehicleId={vehicleId as string}
           currentOdometer={vehicleInfo.currentOdometer}
