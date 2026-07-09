@@ -17,6 +17,7 @@ import { Button } from "../ui/Button/Button";
 import { Drawer } from "../ui/Drawer";
 import { useState } from "react";
 import { ServiceIntervalForm } from "../ServiceIntervalForm/ServiceIntervalForm";
+import { EditableOdometer } from "./EditableOdometer";
 
 ////////////////////////////////////////////////////////////////
 
@@ -77,7 +78,7 @@ export function VehicleDetail() {
 
       {/* Grid s widgetmi (Štatistiky) */}
       <div className={styles.statsGrid}>
-        <div className={styles.statCard}>
+        {/* <div className={styles.statCard}>
           <div className={styles.iconWrapper}>
             <Gauge size={24} />
           </div>
@@ -87,7 +88,12 @@ export function VehicleDetail() {
               {vehicleInfo.currentOdometer.toLocaleString()} km
             </p>
           </div>
-        </div>
+        </div> */}
+
+        <EditableOdometer
+          vehicleId={vehicleId as string}
+          currentOdometer={vehicleInfo.currentOdometer}
+        />
 
         <div className={styles.statCard}>
           <div className={styles.iconWrapper}>
