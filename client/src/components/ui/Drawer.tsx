@@ -1,14 +1,25 @@
 import { motion, AnimatePresence } from "framer-motion";
 import styles from "./Drawer.module.css";
+import cx from "clsx";
 
+type DrawerVariant = "primary" | "secondary";
 interface DrawerProps {
   isOpen: boolean;
   onClose: () => void;
   title: string;
   children: React.ReactNode;
+  variant?: DrawerVariant;
 }
 
-export function Drawer({ isOpen, onClose, title, children }: DrawerProps) {
+export function Drawer({
+  isOpen,
+  onClose,
+  title,
+  children,
+  variant = "primary",
+}: DrawerProps) {
+  const drawerStyle = cx(styles.drawer, styles[variant]);
+
   return (
     <AnimatePresence>
       {isOpen && (
@@ -24,7 +35,7 @@ export function Drawer({ isOpen, onClose, title, children }: DrawerProps) {
 
           {/* Samotný vysúvací panel */}
           <motion.div
-            className={styles.drawer}
+            className={drawerStyle}
             initial={{ x: "100%" }}
             animate={{ x: 0 }}
             exit={{ x: "100%" }}

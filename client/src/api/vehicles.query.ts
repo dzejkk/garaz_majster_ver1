@@ -85,3 +85,21 @@ export function useUpdateOdometer(vehicleId: string) {
     },
   });
 }
+
+// vytvorenie_noveho_vozdila
+
+export function useCreateVehicle() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: vehiclesApi.createVehicle,
+
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["vehicles"] });
+    },
+    onError: (error) => {
+      console.error("CHyba pri vytvarani vozidla", error);
+      alert(error.message);
+    },
+  });
+}

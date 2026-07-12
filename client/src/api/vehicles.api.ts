@@ -52,6 +52,17 @@ export interface CreateServiceTaskPayload {
   lastPerformedDate?: string | null;
 }
 
+export interface NewVehiclePayload {
+  make: string;
+  model: string;
+  year?: number | null;
+  vin?: string | null;
+  engine?: string | null;
+  fuelType?: string | null;
+  enginePowerKw?: number | null;
+  currentOdometer?: number;
+}
+
 //
 //
 //
@@ -66,7 +77,7 @@ export const vehiclesApi = {
     return response.json();
   },
 
-  // nova funkcia pre car detail
+  // GET - funkcia pre car detail
   getCarStatus: async (vehicleId: string): Promise<VehicleStatus> => {
     const response = await fetch(`/api/vehicles/${vehicleId}/status`);
 
@@ -76,7 +87,7 @@ export const vehiclesApi = {
     return response.json();
   },
 
-  // nova funckia pre Servis Detail History
+  // GET -  funckia pre Servis Detail History
   getCarServiceLogs: async (
     vehicleId: string,
   ): Promise<VehicleServisLogs[]> => {
@@ -89,7 +100,7 @@ export const vehiclesApi = {
     return response.json();
   },
 
-  // nova  POST metoda pre  vytvorenie  servis logu
+  // POST metoda pre  vytvorenie  servis logu
   createCarServiceLogs: async (
     data: CreateServiceLogPayload,
   ): Promise<CreateServiceLogPayload[]> => {
@@ -107,7 +118,7 @@ export const vehiclesApi = {
     return response.json();
   },
 
-  //nova POST metoda na vytvorenie servisneho intervalu
+  // POST metoda na vytvorenie servisneho intervalu
 
   createServiceInterval: async (
     data: CreateServiceTaskPayload,
@@ -143,6 +154,25 @@ export const vehiclesApi = {
     if (!response.ok) {
       const errorData = await response.json().catch(() => ({}));
       throw new Error(errorData.error || "Nepodarilo sa aktualizovat odometer");
+    }
+
+    return response.json();
+  },
+
+  // POST - Create Vehicle
+
+  createVehicle: async (newVehicleData: NewVehiclePayload) => {
+    const response = await fetch("/api/vehicles", {
+      method: "POST",
+      headers: {
+        "Content-type": "application/json",
+      },
+      body: JSON.stringify(newVehicleData), // treba spravit z objektu string ktory vie cestovat po HTTP
+    });
+
+    if (!response.ok) {
+      const errorData = await response.json();
+      throw new Error(errorData.error || "Chyba pri vytvaranim noveho vozidla");
     }
 
     return response.json();

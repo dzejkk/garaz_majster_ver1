@@ -1,7 +1,7 @@
 .backdrop {
   position: fixed;
   inset: 0; /* roztiahne sa na celú obrazovku */
-  background: rgba(0, 0, 0, 0.6);
+  background: rgba(0, 0, 0, 0.2);
   z-index: 40;
 }
 
@@ -17,6 +17,16 @@
   display: flex;
   flex-direction: column;
   box-shadow: -4px 0 20px rgba(0, 0, 0, 0.5);
+}
+
+.secondary {
+  width: 100%;
+  max-width: 950px; /* Šírka panelu */
+  background: #17202e; /* Uprav podľa svojej farby aplikácie */
+  display: flex;
+  flex-direction: column;
+  border-left: 1px solid #10b981; /* Zelený akcent */
+  box-shadow: -10px 0 25px rgba(0, 0, 0, 0.5);
 }
 
 .header {

@@ -18,3 +18,10 @@
   color: #9ca3af;
   font-size: 1.1rem;
 }
+
+.headingContainer {
+  margin-inline: 0.5rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
