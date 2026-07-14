@@ -1,5 +1,5 @@
 import styles from "./VehicleCard.module.css";
-import type { Vehicle } from "../../api/vehicles.api"; // je to typ musis pouzit "type"
+import type { Vehicle } from "../../api/vehicles.api"; // je to typ musíš použiť „type"
 import { Link } from "@tanstack/react-router";
 
 export function VehicleCard({ vehicle }: { vehicle: Vehicle }) {

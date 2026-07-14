@@ -51,7 +51,7 @@ export function ServiceIntervalForm({
       onSubmit={(e) => {
         e.preventDefault();
         e.stopPropagation();
-        form.handleSubmit();
+        void form.handleSubmit();
       }}
       className={styles.form}
     >

@@ -60,7 +60,9 @@ export function DashboardLayout() {
       </aside>
 
       {/* Hlavná časť obrazovky */}
+
       <div className={styles.mainContent}>
+
         {/* Vrchná lišta */}
         <header className={styles.header}>
           <div>

@@ -45,7 +45,7 @@ export function VehicleDetail() {
   const handleDeleteVehicle = () => {
     deleteVehicle(vehicleId as string, {
       onSuccess: () => {
-        navigate({ to: "/" });
+        void navigate({ to: "/" });
       },
     });
   };
@@ -207,7 +207,7 @@ export function VehicleDetail() {
         onConfirm={handleDeleteVehicle}
         isPending={isDeleting}
         title="Zmazat vozidlo ?"
-        description={`Naozaj chcete zmazať vozidlo ${vehicleInfo.make} ${vehicleInfo.model} ${vehicleInfo.year} ?`}
+        description={`Naozaj chcete zmazať vozidlo ${vehicleInfo.make} ${vehicleInfo.model} ${vehicleInfo.vin} ?`}
       />
     </motion.div>
   );

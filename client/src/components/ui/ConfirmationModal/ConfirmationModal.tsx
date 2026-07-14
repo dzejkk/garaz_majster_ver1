@@ -1,6 +1,7 @@
 import { motion, AnimatePresence } from "framer-motion";
 import styles from "./ConfirmationModal.module.css";
 import { Button } from "../Button/Button.tsx";
+import { useEffect } from "react";
 
 interface ConfirmationModalProps {
   isOpen: boolean;
@@ -19,6 +20,20 @@ export function ConfirmationModal({
   description,
   isPending = false,
 }: ConfirmationModalProps) {
+  // esc tool
+  useEffect(() => {
+    if (!isOpen) return;
+
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape") {
+        onClose();
+      }
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [isOpen, onClose]);
+
   return (
     <AnimatePresence>
       {isOpen && (

@@ -1,14 +1,12 @@
 import { useForm } from "@tanstack/react-form";
 import { useCreateVehicle } from "../../api/vehicles.query";
 import styles from "./AddVehicleForm.module.css";
-import type {Vehicle} from "../../api/vehicles.api.ts";
 
 interface addVehicleFormProps {
-    onSuccess?: () => void;
+  onSuccess?: () => void;
 }
 
-
-export function AddVehicleForm({ onSuccess }: addVehicleFormProps   ) {
+export function AddVehicleForm({ onSuccess }: addVehicleFormProps) {
   const { mutate: createVehicle, isPending, error } = useCreateVehicle();
 
   const form = useForm({
@@ -24,7 +22,7 @@ export function AddVehicleForm({ onSuccess }: addVehicleFormProps   ) {
     },
 
     onSubmit: async ({ value }) => {
-      // priprava dat pre odoslanie na backend
+      // príprava dat pre odoslanie na backend
       const payload = {
         make: value.make.trim(),
         model: value.model.trim(),
@@ -52,7 +50,7 @@ export function AddVehicleForm({ onSuccess }: addVehicleFormProps   ) {
       onSubmit={(e) => {
         e.preventDefault();
         e.stopPropagation();
-        form.handleSubmit();
+        void form.handleSubmit();
       }}
       className={styles.formContainer}
     >
@@ -61,7 +59,7 @@ export function AddVehicleForm({ onSuccess }: addVehicleFormProps   ) {
       {/* start of form layout */}
 
       <div className={styles.grid}>
-        {/* Znacka - povinne pole */}
+        {/* Značka - povinne pole */}
         <form.Field
           name="make"
           validators={{

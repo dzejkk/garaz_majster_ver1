@@ -33,8 +33,8 @@
 }
 
 .danger {
-  background-color: #d43b3b;
-  color: rgb(219, 206, 206);
+  background-color: #ca4040;
+  color: rgb(232 221 221);
 }
 .danger:hover:not(:disabled) {
   background-color: #b91c1c;
