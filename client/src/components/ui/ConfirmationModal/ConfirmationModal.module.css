@@ -1,0 +1,59 @@
+/*container*/
+.backdropOverlay {
+    position: fixed;
+    inset: 0;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    z-index: 100;
+    padding: 1rem;
+}
+
+/*only visual effects*/
+.backdrop {
+    position: absolute;
+    inset: 0;
+    backdrop-filter: blur(4px);
+    background-color: rgba(0, 0, 0, 0.5);
+}
+
+/*actual modal box*/
+.modalBox {
+    font-family: --heading, sans-serif;
+    position: relative;
+    margin-block-start: 5rem;
+    z-index: 101;
+    max-width: 450px;
+    min-height: 150px;
+    text-wrap: balance;
+    width: 100%;
+    background-color: #1f2937;
+    padding: 1.5rem;
+    border-radius: 0.5rem;
+    border: 1px solid #374151;
+    text-align: left;
+    display: flex;
+    flex-direction: column;
+}
+
+.actions {
+    margin-top: auto;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    gap: 1rem;
+}
+
+.title {
+    color: #ffffff;
+    margin: 0 0 0.5rem 0;
+    font-size: 1.25rem;
+    font-weight: 600;
+}
+
+.description {
+    color: #9ca3af;
+    font-size: 0.95rem;
+    line-height: 1.5;
+    margin: 0 0 1.5rem 0;
+}

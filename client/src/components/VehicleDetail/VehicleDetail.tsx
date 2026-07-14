@@ -18,12 +18,12 @@ import { Drawer } from "../ui/Drawer";
 import { useState } from "react";
 import { ServiceIntervalForm } from "../ServiceIntervalForm/ServiceIntervalForm";
 import { EditableOdometer } from "./EditableOdometer";
-
-////////////////////////////////////////////////////////////////
+import { ConfirmationModal } from "../ui/ConfirmationModal/ConfirmationModal.tsx";
 
 export function VehicleDetail() {
   const navigate = useNavigate();
   const [activateDrawer, setActivateDrawer] = useState(false);
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const { mutate: deleteVehicle, isPending: isDeleting } = useDeleteVehicle();
 
   //ťahanie vehicleID s useParams
@@ -43,19 +43,11 @@ export function VehicleDetail() {
 
   //HANDLER DELETE
   const handleDeleteVehicle = () => {
-    const isConfirmed = window.confirm(
-      `Naozaj chcete vymazať vozidlo ${vehicleInfo.make} ${vehicleInfo.model} ? tato akcia je nezvratná a zmaže všetky údaje o vozidle`,
-    );
-
-    if (isConfirmed) {
-      // voláme mutáciu
-
-      deleteVehicle(vehicleId as string, {
-        onSuccess: () => {
-          navigate({to: "/"});
-        },
-      });
-    }
+    deleteVehicle(vehicleId as string, {
+      onSuccess: () => {
+        navigate({ to: "/" });
+      },
+    });
   };
 
   // Pomocná funkcia na vykreslenie správnej ikony k statusu servisu
@@ -71,7 +63,6 @@ export function VehicleDetail() {
   };
 
   return (
-    // Celý kontajner jemne animujeme pri vstupe na stránku
     <motion.div
       className={styles.container}
       initial={{ opacity: 0, y: 15 }}
@@ -94,7 +85,7 @@ export function VehicleDetail() {
           <Button
             size="sm"
             variant="danger"
-            onClick={handleDeleteVehicle}
+            onClick={() => setIsDeleteModalOpen(true)}
             disabled={isDeleting}
           >
             <Trash2 size={18} />
@@ -197,7 +188,8 @@ export function VehicleDetail() {
           </div>
         ))}
       </div>
-      
+
+      {/* ============== UI COMPONENETY ===========================*/}
       <Drawer
         isOpen={activateDrawer}
         onClose={() => setActivateDrawer(false)}
@@ -208,6 +200,15 @@ export function VehicleDetail() {
           onClose={() => setActivateDrawer(false)}
         />
       </Drawer>
+
+      <ConfirmationModal
+        isOpen={isDeleteModalOpen}
+        onClose={() => setIsDeleteModalOpen(false)}
+        onConfirm={handleDeleteVehicle}
+        isPending={isDeleting}
+        title="Zmazat vozidlo ?"
+        description={`Naozaj chcete zmazať vozidlo ${vehicleInfo.make} ${vehicleInfo.model} ${vehicleInfo.year} ?`}
+      />
     </motion.div>
   );
 }
