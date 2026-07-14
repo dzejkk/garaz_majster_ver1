@@ -19,8 +19,8 @@
 
 .grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-  gap: 1.25rem;
+  grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+  gap: 1rem;
   margin-bottom: 2rem;
 }
 
@@ -34,7 +34,7 @@
 .label {
   color: #9ca3af;
   font-size: 0.875rem;
-  font-weight: 500;
+  font-weight: 600;
 }
 
 .input,

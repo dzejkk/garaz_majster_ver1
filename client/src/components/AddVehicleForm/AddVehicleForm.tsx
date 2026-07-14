@@ -1,8 +1,14 @@
 import { useForm } from "@tanstack/react-form";
 import { useCreateVehicle } from "../../api/vehicles.query";
 import styles from "./AddVehicleForm.module.css";
+import type {Vehicle} from "../../api/vehicles.api.ts";
 
-export function AddVehicleForm({ onSuccess }) {
+interface addVehicleFormProps {
+    onSuccess?: () => void;
+}
+
+
+export function AddVehicleForm({ onSuccess }: addVehicleFormProps   ) {
   const { mutate: createVehicle, isPending, error } = useCreateVehicle();
 
   const form = useForm({
@@ -18,7 +24,7 @@ export function AddVehicleForm({ onSuccess }) {
     },
 
     onSubmit: async ({ value }) => {
-      // priprava dat pre  odoslanie na backend
+      // priprava dat pre odoslanie na backend
       const payload = {
         make: value.make.trim(),
         model: value.model.trim(),
@@ -56,7 +62,6 @@ export function AddVehicleForm({ onSuccess }) {
 
       <div className={styles.grid}>
         {/* Znacka - povinne pole */}
-
         <form.Field
           name="make"
           validators={{
@@ -112,6 +117,153 @@ export function AddVehicleForm({ onSuccess }) {
                   {field.state.meta.errors.join(", ")}
                 </span>
               ) : null}
+            </div>
+          )}
+        />
+
+        {/* Rok výroby */}
+        <form.Field
+          name="year"
+          children={(field) => (
+            <div className={styles.inputGroup}>
+              <label className={styles.label} htmlFor={field.name}>
+                Rok výroby
+              </label>
+              <input
+                id={field.name}
+                name={field.name}
+                type="number"
+                value={field.state.value}
+                onBlur={field.handleBlur}
+                onChange={(e) => field.handleChange(e.target.value)}
+                className={styles.input}
+                placeholder="2018"
+              />
+            </div>
+          )}
+        />
+
+        {/* VIN */}
+        <form.Field
+          name="vin"
+          validators={{
+            onChange: ({ value }) =>
+              value && value.length > 17
+                ? "VIN môže mať max 17 znakov"
+                : undefined,
+          }}
+          children={(field) => (
+            <div className={styles.inputGroup}>
+              <label className={styles.label} htmlFor={field.name}>
+                VIN číslo
+              </label>
+              <input
+                id={field.name}
+                name={field.name}
+                maxLength={17}
+                value={field.state.value}
+                onBlur={field.handleBlur}
+                onChange={(e) => field.handleChange(e.target.value)}
+                className={styles.input}
+                placeholder="JT0..."
+              />
+              {field.state.meta.errors ? (
+                <span className={styles.fieldError}>
+                  {field.state.meta.errors.join(", ")}
+                </span>
+              ) : null}
+            </div>
+          )}
+        />
+
+        {/* Motor */}
+        <form.Field
+          name="engine"
+          children={(field) => (
+            <div className={styles.inputGroup}>
+              <label className={styles.label} htmlFor={field.name}>
+                Motor / Objem
+              </label>
+              <input
+                id={field.name}
+                name={field.name}
+                value={field.state.value}
+                onBlur={field.handleBlur}
+                onChange={(e) => field.handleChange(e.target.value)}
+                className={styles.input}
+                placeholder="1.8 Hybrid, 2.0 Skyactiv-G"
+              />
+            </div>
+          )}
+        />
+
+        {/* Palivo */}
+        <form.Field
+          name="fuelType"
+          children={(field) => (
+            <div className={styles.inputGroup}>
+              <label className={styles.label} htmlFor={field.name}>
+                Palivo
+              </label>
+              <select
+                id={field.name}
+                name={field.name}
+                value={field.state.value}
+                onBlur={field.handleBlur}
+                onChange={(e) => field.handleChange(e.target.value)}
+                className={styles.select}
+              >
+                <option value="Benzín">Benzín</option>
+                <option value="Nafta">Nafta</option>
+                <option value="Hybrid">Mild Hybrid</option>
+                <option value="Plug-in Hybrid">Plug-in Hybrid</option>
+                <option value="Elektrina">Elektrina</option>
+                <option value="LPG">LPG</option>
+              </select>
+            </div>
+          )}
+        />
+
+        {/* Výkon kW */}
+        <form.Field
+          name="enginePowerKw"
+          children={(field) => (
+            <div className={styles.inputGroup}>
+              <label className={styles.label} htmlFor={field.name}>
+                Výkon (kW)
+              </label>
+              <input
+                id={field.name}
+                name={field.name}
+                type="number"
+                value={field.state.value}
+                onBlur={field.handleBlur}
+                onChange={(e) => field.handleChange(e.target.value)}
+                className={styles.input}
+                placeholder="100"
+              />
+            </div>
+          )}
+        />
+
+        {/* Počiatočné kilometre */}
+        <form.Field
+          name="currentOdometer"
+          children={(field) => (
+            <div className={styles.inputGroup}>
+              <label className={styles.label} htmlFor={field.name}>
+                Aktuálne kilometre
+              </label>
+              <input
+                id={field.name}
+                name={field.name}
+                type="number"
+                value={field.state.value}
+                onBlur={field.handleBlur}
+                onChange={(e) => field.handleChange(e.target.value)}
+                className={styles.input}
+                placeholder="0"
+              />
             </div>
           )}
         />

@@ -92,3 +92,27 @@ export const updateVehicle = async (req: Request, res: Response) => {
     res.status(500).json({ error: "Interná chyba servera" });
   }
 };
+
+export const deleteVehicle = async (req: Request, res: Response) => {
+  try {
+    const { id } = req.params;
+
+    if (!id) {
+      res.status(400).json({ error: "ID vozidla je povinné." });
+      return;
+    }
+
+    // Voláme tvoj model, ktorý spraví Drizzle dopyt: db.delete(vehicles).where(eq(vehicles.id, id))
+    const deletedVehicle = await vehicleModel.delete(id as string);
+
+    if (!deletedVehicle) {
+      res.status(404).json({ error: "Vozidlo sa nenašlo." });
+      return;
+    }
+
+    res.json({ message: "Vozidlo bolo úspešne zmazané." });
+  } catch (error) {
+    console.error("Chyba pri mazaní vozidla:", error);
+    res.status(500).json({ error: "Interná chyba servera" });
+  }
+};

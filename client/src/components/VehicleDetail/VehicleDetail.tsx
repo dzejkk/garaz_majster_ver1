@@ -1,16 +1,16 @@
-import { useVehicleStatus } from "../../api/vehicles.query";
-import { useParams, Link } from "@tanstack/react-router";
+import { useDeleteVehicle, useVehicleStatus } from "../../api/vehicles.query";
+import { useParams, Link, useNavigate } from "@tanstack/react-router";
 import { motion } from "framer-motion";
 import cx from "clsx";
 import {
   ArrowLeft,
   Wrench,
   DollarSign,
-  Gauge,
   CheckCircle2,
   AlertTriangle,
   XCircle,
   PlusCircle,
+  Trash2,
 } from "lucide-react";
 import styles from "./VehicleDetail.module.css";
 import { Button } from "../ui/Button/Button";
@@ -22,26 +22,41 @@ import { EditableOdometer } from "./EditableOdometer";
 ////////////////////////////////////////////////////////////////
 
 export function VehicleDetail() {
+  const navigate = useNavigate();
   const [activateDrawer, setActivateDrawer] = useState(false);
+  const { mutate: deleteVehicle, isPending: isDeleting } = useDeleteVehicle();
 
-  //tahanie vehicleID s useParams
+  //ťahanie vehicleID s useParams
   const { vehicleId } = useParams({ strict: false });
-
-  // Tanstack
   const {
     isLoading,
     isError,
     data: statusData,
   } = useVehicleStatus(vehicleId as string);
-
   //
-
   if (isLoading) return <div>Načítavam detaily motora...</div>;
   if (isError) return <div>Chyba pri načítaní detailov.</div>;
   if (!statusData) return null;
 
-  // musi ist az po if
+  // musí ist az po if
   const { vehicleInfo, stats, serviceIntervals } = statusData;
+
+  //HANDLER DELETE
+  const handleDeleteVehicle = () => {
+    const isConfirmed = window.confirm(
+      `Naozaj chcete vymazať vozidlo ${vehicleInfo.make} ${vehicleInfo.model} ? tato akcia je nezvratná a zmaže všetky údaje o vozidle`,
+    );
+
+    if (isConfirmed) {
+      // voláme mutáciu
+
+      deleteVehicle(vehicleId as string, {
+        onSuccess: () => {
+          navigate({to: "/"});
+        },
+      });
+    }
+  };
 
   // Pomocná funkcia na vykreslenie správnej ikony k statusu servisu
   const getStatusIcon = (status: "OK" | "WARNING" | "DUE") => {
@@ -74,9 +89,20 @@ export function VehicleDetail() {
           </h1>
           <span className={styles.subtitle}>VIN: {vehicleInfo.vin}</span>
         </div>
+        {/* DELETE VEHICLE */}
+        <div>
+          <Button
+            size="sm"
+            variant="danger"
+            onClick={handleDeleteVehicle}
+            disabled={isDeleting}
+          >
+            <Trash2 size={18} />
+          </Button>
+        </div>
       </div>
 
-      {/* Grid s widgetmi (Štatistiky) */}
+      {/* Grid s widget (Štatistiky) */}
       <div className={styles.statsGrid}>
         <EditableOdometer
           vehicleId={vehicleId as string}
@@ -113,7 +139,16 @@ export function VehicleDetail() {
         </Link>
       </div>
 
-      {/* Sekcia: Servisný semafor */}
+      <hr
+        style={{
+          border: "none",
+          height: "1px",
+          background: "#374151",
+          marginBlockEnd: "2rem",
+        }}
+      />
+
+      {/* sekcia: Servisný semafor */}
 
       <div className={styles.flex_between_util}>
         <h2 className={styles.sectionTitle}>Stav servisných intervalov</h2>
@@ -140,7 +175,7 @@ export function VehicleDetail() {
             <div className={styles.intervalInfo}>
               <h4>{interval.title}</h4>
               <p>
-                Interval: {interval.intervalKm.toLocaleString()} km | Naposledy
+                Interval: {interval.intervalKm?.toLocaleString()} km | Naposledy
                 pri: {interval.lastPerformedOdometer?.toLocaleString()} km
               </p>
               <p>
@@ -155,14 +190,14 @@ export function VehicleDetail() {
               {getStatusIcon(interval.status)}
               <span>
                 {interval.remainingKm > 0
-                  ? `Zostáva ${interval.remainingKm.toLocaleString()} km alebo ${interval.remainingDays} dni`
+                  ? `Zostáva ${interval.remainingKm?.toLocaleString()} km alebo ${interval.remainingDays} dni`
                   : `Zmeškané o ${Math.abs(interval.remainingKm).toLocaleString()} km a ${interval.remainingDays} dni`}
               </span>
             </div>
           </div>
         ))}
       </div>
-
+      
       <Drawer
         isOpen={activateDrawer}
         onClose={() => setActivateDrawer(false)}
@@ -171,7 +206,7 @@ export function VehicleDetail() {
         <ServiceIntervalForm
           vehicleId={vehicleId as string}
           onClose={() => setActivateDrawer(false)}
-        ></ServiceIntervalForm>
+        />
       </Drawer>
     </motion.div>
   );

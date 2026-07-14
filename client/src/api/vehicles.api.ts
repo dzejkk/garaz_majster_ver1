@@ -177,4 +177,19 @@ export const vehiclesApi = {
 
     return response.json();
   },
+
+  // DELETE - one vehicle
+
+  deleteVehicle: async (id: string) => {
+    const response = await fetch(`/api/vehicles/${id}`, {
+      method: "DELETE",
+    });
+
+    if (!response.ok) {
+      const errorData = await response.json();
+      throw new Error(errorData.error || "chyba pri mazani vozidla");
+    }
+
+    return response.json();
+  },
 };

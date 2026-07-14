@@ -44,4 +44,13 @@ export const vehicleModel = {
       .returning();
     return updatedVehicle;
   },
+
+  delete: async (id: string) => {
+    const [deletedVehicle] = await db
+      .delete(vehicles)
+      .where(eq(vehicles.id, id))
+      .returning();
+
+    return deletedVehicle || null;
+  },
 };

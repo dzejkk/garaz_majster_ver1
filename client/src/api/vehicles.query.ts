@@ -103,3 +103,21 @@ export function useCreateVehicle() {
     },
   });
 }
+
+// zmazanie vozidla
+
+export function useDeleteVehicle() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: vehiclesApi.deleteVehicle,
+    onSuccess: () => {
+      // Zoznam sa okamžite prečíta znova a zmazané auto zmizne z obrazovky
+      queryClient.invalidateQueries({ queryKey: ["vehicles"] });
+    },
+    onError: (error: Error) => {
+      console.error("Chyba pri mazaní:", error);
+      alert(error.message);
+    },
+  });
+}

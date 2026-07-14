@@ -60,7 +60,7 @@ export function Home() {
           onClose={() => setDrawerIsOpen(false)}
           variant="secondary"
         >
-          <AddVehicleForm />
+          <AddVehicleForm onSuccess={()=> setDrawerIsOpen(false)} />
         </Drawer>
       </div>
     </>
