@@ -1,4 +1,3 @@
-import { useDeleteVehicle, useVehicleStatus } from "../../api/vehicles.query";
 import { useParams, Link, useNavigate } from "@tanstack/react-router";
 import { motion } from "framer-motion";
 import cx from "clsx";
@@ -11,6 +10,7 @@ import {
   XCircle,
   PlusCircle,
   Trash2,
+  Pencil,
 } from "lucide-react";
 import styles from "./VehicleDetail.module.css";
 import { Button } from "../ui/Button/Button";
@@ -19,15 +19,24 @@ import { useState } from "react";
 import { ServiceIntervalForm } from "../ServiceIntervalForm/ServiceIntervalForm";
 import { EditableOdometer } from "./EditableOdometer";
 import { ConfirmationModal } from "../ui/ConfirmationModal/ConfirmationModal.tsx";
+import { VehicleForm } from "../AddVehicleForm/VehicleForm.tsx";
+import {
+  useDeleteVehicle,
+  useUpdateVehicle,
+  useVehicleStatus,
+} from "../../api/vehicles.query.ts";
 
 export function VehicleDetail() {
   const navigate = useNavigate();
+  const { vehicleId } = useParams({ strict: false });
   const [activateDrawer, setActivateDrawer] = useState(false);
+  const [activateEditDrawer, setActivateEditDrawer] = useState(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const { mutate: deleteVehicle, isPending: isDeleting } = useDeleteVehicle();
+  const { mutate: editVehicle, isPending: editVehiclePending } =
+    useUpdateVehicle(vehicleId as string);
 
   //ťahanie vehicleID s useParams
-  const { vehicleId } = useParams({ strict: false });
   const {
     isLoading,
     isError,
@@ -79,9 +88,21 @@ export function VehicleDetail() {
             {vehicleInfo.make} {vehicleInfo.model}
           </h1>
           <span className={styles.subtitle}>VIN: {vehicleInfo.vin}</span>
+          <span className={styles.subtitle}>
+            kW: {vehicleInfo.enginePowerKw}
+          </span>
         </div>
-        {/* DELETE VEHICLE */}
+        {/* edit vehicle / delete vehicle*/}
         <div>
+          {/*  UPDATE VEHICLE*/}
+          <Button
+            size="sm"
+            variant="outline"
+            onClick={() => setActivateEditDrawer(true)}
+          >
+            <Pencil size={18} />
+          </Button>
+          {/* DELETE VEHICLE */}
           <Button
             size="sm"
             variant="danger"
@@ -198,6 +219,30 @@ export function VehicleDetail() {
         <ServiceIntervalForm
           vehicleId={vehicleId as string}
           onClose={() => setActivateDrawer(false)}
+        />
+      </Drawer>
+
+      {/*edit vehicle drawer*/}
+
+      <Drawer
+        title="Uprava udajov o vozidle"
+        isOpen={activateEditDrawer}
+        onClose={() => setActivateEditDrawer(false)}
+        variant="secondary"
+      >
+        <VehicleForm
+          initialData={vehicleInfo}
+          onSubmit={(formData) => {
+            editVehicle(
+              { id: vehicleId as string, ...formData },
+              {
+                onSuccess: () => {
+                  setActivateEditDrawer(false);
+                },
+              },
+            );
+          }}
+          isPending={editVehiclePending}
         />
       </Drawer>
 

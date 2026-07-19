@@ -1,4 +1,4 @@
-import { useVehicles } from "../../api/vehicles.query";
+import { useCreateVehicle, useVehicles } from "../../api/vehicles.query";
 import { VehicleCard } from "../VehicleCard/VehicleCard";
 import { useState } from "react";
 import { motion } from "framer-motion";
@@ -6,12 +6,17 @@ import { Button } from "../ui/Button/Button";
 import { Plus } from "lucide-react";
 import styles from "./Home.module.css";
 import { Drawer } from "../ui/Drawer";
-import { AddVehicleForm } from "../AddVehicleForm/AddVehicleForm";
+import { VehicleForm } from "../AddVehicleForm/VehicleForm.tsx";
 
 export function Home() {
   const [drawerIsOpen, setDrawerIsOpen] = useState(false);
   // TanStack Query //
   const { isLoading, isError, data: vehicles } = useVehicles();
+  const {
+    mutate: createVehicle,
+    error: createVehicleError,
+    isPending,
+  } = useCreateVehicle();
   ////////////////////
 
   if (isLoading)
@@ -60,7 +65,18 @@ export function Home() {
           onClose={() => setDrawerIsOpen(false)}
           variant="secondary"
         >
-          <AddVehicleForm onSuccess={()=> setDrawerIsOpen(false)} />
+          {createVehicleError && <div>{createVehicleError.message}</div>}
+          <VehicleForm
+            onSuccess={() => setDrawerIsOpen(false)}
+            onSubmit={(formData) => {
+              createVehicle(formData, {
+                onSuccess: () => {
+                  setDrawerIsOpen(false);
+                },
+              });
+            }}
+            isPending={isPending}
+          />
         </Drawer>
       </div>
     </>

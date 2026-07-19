@@ -1,4 +1,3 @@
-import { numeric } from "drizzle-orm/sqlite-core";
 import { db } from "../db/index.js";
 import { vehicles, serviceLogs, serviceTasks } from "../db/schema.js";
 import { eq, sql } from "drizzle-orm";
@@ -89,15 +88,13 @@ export const vehicleStatusModel = {
       };
     });
 
-    // 5. Vrátime kompletný prehľadný balíček pre frontend
+    // 5. Vrátime kompletný balíček pre frontend (Pattern: BFF / Aggregate Endpoint)
+    // POZOR: V 'vehicleInfo' musíme vždy vrátiť CELÝ objekt vozidla bez orezávania stĺpcov!
+    // Dôvod: Dáta z tohto endpointu slúžia ako 'initialData' pre editačný formulár (VehicleForm).
+    // Ak by sme tu vrátili len čiastočné dáta, pri PATCH update by sme v databáze zmazali
+    // chýbajúce polia (napr. engine, kW, vin).
     return {
-      vehicleInfo: {
-        id: vehicle.id,
-        make: vehicle.make,
-        model: vehicle.model,
-        currentOdometer: vehicle.currentOdometer,
-        vin: vehicle.vin,
-      },
+      vehicleInfo: vehicle,
       stats: {
         totalRepairs: Number(stats?.totalRepairs || 0),
         totalSpent: Number(stats?.totalSpent || 0),

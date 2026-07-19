@@ -13,11 +13,11 @@ router.post("/", createVehicle);
 
 router.get("/", getVehicles);
 
-router.put("/:id", updateVehicle);
+router.patch("/:id", updateVehicle);
 
 router.delete("/:id", deleteVehicle);
 
-//hlavna logika vypoctov
+//hlavná logika výpočtov
 router.get("/:vehicleId/status", getVehicleStatusHandler);
 
 export default router;

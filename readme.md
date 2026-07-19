@@ -1,4 +1,4 @@
-Ahoj, pokračujeme vo vývoji projektu "Garáž Majster". Použi tento kompletný kontext, aby si presne vedel, v akom stave je kód, architektúra a čo ideme robiť teraz:
+ "Garáž Majster"
 
 ## 🛠️ Technický Stack
 
@@ -28,9 +28,21 @@ Implementovali sme pravidlo „Čo nastane skôr“ (Whichever comes first).
 2. Vlastné úpravy: V detaile auta bude možnosť upraviť tieto predvolené hodnoty alebo pridať vlastnú špecifickú úlohu (napr. Rozvody) cez vyskakovací Modal.
 3. Prepojenie s históriou: Pri zápise nového servisu si používateľ v dropdown menu voliteľne vyberie, na ktorú úlohu (napr. Výmena oleja) sa tento log viaže. Ak ju vyberie, backend v jednej transakcii zapíše log a zároveň prepíše `lastPerformedOdometer` a `lastPerformedDate` v danej úlohe, čím vyresetuje interval.
 
-## 🎯 Čo ideme robiť teraz
 
-- implementovat zapis kilometrov pre vozdilo
-- ptm musime upravit serviceInterval Badge aby nam pekne zobrazovalo prepasnute dni aj kilometre,
-- spravit z par veci komponenty aby sa to trosku upratalo
-- atd....
+## 🏗️ Architektonické rozhodnutia a Návrhové vzory
+
+### 1. Zdieľaný formulár pre Create / Edit (Form Reusability)
+Namiesto duplikovania kódu používame jeden univerzálny komponent `<VehicleForm />`.
+- Rodičovský komponent (stránka alebo Drawer) zodpovedá za sietovú logiku a podhadzuje 
+- formuláru mutáciu (`useCreateVehicle` alebo `useUpdateVehicle`) cez prop `onSubmit`.
+- Formulár funguje ako nezávislá jednotka: spracováva validácie a stav inputov,
+- po odoslaní vracia čistý `payload` rodičovi.
+
+### 2. BFF (Backend-For-Frontend) & Dashboard Aggregate Pattern
+Na stránkach detailu (napr. `VehicleDetailPage`) nevoláme z frontendu viacero 
+samostatných endpointov pre auto, štatistiky a servisné intervaly.
+- Využívame agregovaný endpoint `/api/vehicles/:id/status`, ktorý na strane servera
+- spojí SQL dopyty a vráti kompletný balík dát pre danú obrazovku.
+- **Pravidlo úplnosti dát:** Vlastnosť `vehicleInfo` v tomto balíku musí vždy obsahovať 
+- 100% entitu z databázy (`SELECT *`). Garantuje to bezpečné predvyplnenie editačného 
+- formulára (`initialData`) bez rizika straty dát pri následnom `PATCH` update.

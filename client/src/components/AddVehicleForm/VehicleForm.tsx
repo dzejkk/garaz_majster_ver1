@@ -1,24 +1,31 @@
 import { useForm } from "@tanstack/react-form";
-import { useCreateVehicle } from "../../api/vehicles.query";
-import styles from "./AddVehicleForm.module.css";
+import styles from "./VehicleForm.module.css";
+import type { VehicleFormData } from "../../types/vehicle.types.ts";
 
-interface addVehicleFormProps {
+interface VehicleFormProps {
   onSuccess?: () => void;
+  onSubmit?: (data: VehicleFormData) => void;
+  isPending: boolean;
+  initialData?: (Partial<VehicleFormData> & { id?: string }) | null;
 }
 
-export function AddVehicleForm({ onSuccess }: addVehicleFormProps) {
-  const { mutate: createVehicle, isPending, error } = useCreateVehicle();
+export function VehicleForm({
+  initialData = null,
+  onSubmit,
+  isPending,
+}: VehicleFormProps) {
+  const isEditMode = !!initialData;
 
   const form = useForm({
     defaultValues: {
-      make: "",
-      model: "",
-      year: "",
-      vin: "",
-      engine: "",
-      fuelType: "Benzín",
-      enginePowerKw: "",
-      currentOdometer: "0",
+      make: initialData?.make ?? "",
+      model: initialData?.model ?? "",
+      year: initialData?.year ?? "",
+      vin: initialData?.vin ?? "",
+      engine: initialData?.engine ?? "",
+      fuelType: initialData?.fuelType ?? "Benzín",
+      enginePowerKw: initialData?.enginePowerKw ?? "",
+      currentOdometer: initialData?.currentOdometer ?? "0",
     },
 
     onSubmit: async ({ value }) => {
@@ -36,12 +43,9 @@ export function AddVehicleForm({ onSuccess }: addVehicleFormProps) {
           : 0,
       };
 
-      createVehicle(payload, {
-        onSuccess: () => {
-          form.reset();
-          if (onSuccess) onSuccess();
-        },
-      });
+      if (onSubmit) {
+        onSubmit(payload);
+      }
     },
   });
 
@@ -54,8 +58,6 @@ export function AddVehicleForm({ onSuccess }: addVehicleFormProps) {
       }}
       className={styles.formContainer}
     >
-      {error && <div className={styles.errorMessage}>{error.message}</div>}
-
       {/* start of form layout */}
 
       <div className={styles.grid}>
@@ -270,7 +272,11 @@ export function AddVehicleForm({ onSuccess }: addVehicleFormProps) {
       {/* submit button */}
       <div className={styles.actions}>
         <button type="submit" disabled={isPending} className={styles.submitBtn}>
-          {isPending ? "Ukladám..." : "Pridať vozidlo"}
+          {isPending
+            ? "Ukladám..."
+            : isEditMode
+              ? "Uložiť zmeny"
+              : "Pridať vozidlo"}
         </button>
       </div>
     </form>

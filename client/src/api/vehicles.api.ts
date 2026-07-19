@@ -1,4 +1,5 @@
 export interface Vehicle {
+  enginePowerKw: number;
   id: string;
   make: string;
   model: string;
@@ -51,7 +52,6 @@ export interface CreateServiceTaskPayload {
   lastPerformedOdometer?: number | null;
   lastPerformedDate?: string | null;
 }
-
 export interface NewVehiclePayload {
   make: string;
   model: string;
@@ -63,11 +63,7 @@ export interface NewVehiclePayload {
   currentOdometer?: number;
 }
 
-//
-//
-//
-
-// pouzivame nativny JS  fetch, + Vite proxy pre zavolanie serveru
+// používame natívny JS fetch, + Vite proxy pre volanie serveru
 export const vehiclesApi = {
   getAll: async (): Promise<Vehicle[]> => {
     const response = await fetch("/api/vehicles");
@@ -77,7 +73,7 @@ export const vehiclesApi = {
     return response.json();
   },
 
-  // GET - funkcia pre car detail
+  // GET-funkcia pre car detail
   getCarStatus: async (vehicleId: string): Promise<VehicleStatus> => {
     const response = await fetch(`/api/vehicles/${vehicleId}/status`);
 
@@ -87,7 +83,7 @@ export const vehiclesApi = {
     return response.json();
   },
 
-  // GET -  funckia pre Servis Detail History
+  // GET -  function pre Servis Detail History
   getCarServiceLogs: async (
     vehicleId: string,
   ): Promise<VehicleServisLogs[]> => {
@@ -118,7 +114,7 @@ export const vehiclesApi = {
     return response.json();
   },
 
-  // POST metoda na vytvorenie servisneho intervalu
+  // POST metóda na vytvorenie servisného intervalu
 
   createServiceInterval: async (
     data: CreateServiceTaskPayload,
@@ -140,11 +136,11 @@ export const vehiclesApi = {
     return response.json() as Promise<CreateServiceTaskPayload[]>;
   },
 
-  // PUT -  aktualizacia odometra
+  // PATCH-aktualizácia odometer
 
   updateOdometer: async (vehicleId: string, currentOdometer: number) => {
     const response = await fetch(`/api/vehicles/${vehicleId}`, {
-      method: "PUT",
+      method: "PATCH",
       headers: {
         "Content-Type": "application/json",
       },
@@ -159,7 +155,7 @@ export const vehiclesApi = {
     return response.json();
   },
 
-  // POST - Create Vehicle
+  // POST-Create Vehicle
 
   createVehicle: async (newVehicleData: NewVehiclePayload) => {
     const response = await fetch("/api/vehicles", {
@@ -178,7 +174,7 @@ export const vehiclesApi = {
     return response.json();
   },
 
-  // DELETE - one vehicle
+  // DELETE-one vehicle
 
   deleteVehicle: async (id: string) => {
     const response = await fetch(`/api/vehicles/${id}`, {
@@ -190,6 +186,27 @@ export const vehiclesApi = {
       throw new Error(errorData.error || "chyba pri mazani vozidla");
     }
 
+    return response.json();
+  },
+
+  // PATCH-update celeho auta
+
+  updateVehicle: async ({
+    id,
+    ...data
+  }: {
+    id: string;
+    [key: string]: any;
+  }) => {
+    const response = await fetch(`/api/vehicles/${id}`, {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(data),
+    });
+    if (!response.ok) {
+      const errorData = await response.json();
+      throw new Error(errorData.error || "Chyba pri uprave vozidla");
+    }
     return response.json();
   },
 };

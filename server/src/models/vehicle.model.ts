@@ -53,4 +53,14 @@ export const vehicleModel = {
 
     return deletedVehicle || null;
   },
+
+  updateVehicle: async (vehicleId: string, data: Partial<typeof vehicles.$inferInsert>) => {
+    const [updatedVehicle] = await db
+      .update(vehicles)
+      .set(data)
+      .where(eq(vehicles.id, vehicleId))
+      .returning();
+
+    return updatedVehicle || null;
+  }
 };

@@ -121,3 +121,18 @@ export function useDeleteVehicle() {
     },
   });
 }
+
+// update vozidla
+
+export function useUpdateVehicle(vehicleId: string) {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: vehiclesApi.updateVehicle,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["vehicles"] });
+      //
+      queryClient.invalidateQueries({ queryKey: ["vehicleStatus", vehicleId] });
+    },
+  });
+}
